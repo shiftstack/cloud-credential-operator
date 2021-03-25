@@ -1,3 +1,19 @@
+/*
+Copyright 2021 The OpenShift Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package openstack
 
 import (
@@ -36,12 +52,11 @@ const (
 	controllerName = "secretannotator"
 )
 
-func NewReconciler(mgr manager.Manager, projectName string) reconcile.Reconciler {
+func NewReconciler(mgr manager.Manager) reconcile.Reconciler {
 	c := mgr.GetClient()
 	r := &ReconcileCloudCredSecret{
-		Client:      c,
-		Logger:      log.WithField("controller", constants.SecretAnnotatorControllerName),
-		ProjectName: projectName,
+		Client: c,
+		Logger: log.WithField("controller", constants.SecretAnnotatorControllerName),
 	}
 
 	s := status.NewSecretStatusHandler(c)
@@ -93,8 +108,7 @@ var _ reconcile.Reconciler = &ReconcileCloudCredSecret{}
 
 type ReconcileCloudCredSecret struct {
 	client.Client
-	ProjectName string
-	Logger      log.FieldLogger
+	Logger log.FieldLogger
 }
 
 // Reconcile will typically annotate the cloud cred secret to indicate the capabilities of the cloud credentials:
